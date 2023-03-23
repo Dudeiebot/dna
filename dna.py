@@ -4,18 +4,34 @@ import sys
 
 def main():
 
-    # TODO: Check for command-line usage
+    # Check for command-line usage
+    if len(sys.argv) != 3:
+        print("Usage: python dna.py database/.csv sequences/.txt")
+        sys.exit(1)
 
-    # TODO: Read database file into a variable
+    # Read database file into a variable
+    with open(sys.argv[1], "r") as database_file:
+        database_reader = csv.reader(database_file)
+        database = list(database_reader)
+        # Extract the STRs from the first row of the database
+        str_sequences = database[0][1:]
     
-    # TODO: Read DNA sequence file into a variable
+    # Read DNA sequence file into a variable
+    with open(sys.argv[2], "r") as sequence_file:
+        dna_sequence = sequence_file.readline().rstrip()
 
-    # TODO: Find longest match of each STR in DNA sequence
+    # Find longest match of each STR in DNA sequence
+    longest_str_counts = []
+    for str_seq in str_sequences:
+        longest_str_counts.append(str(longest_match(dna_sequence, str_seq)))
 
-    # TODO: Check database for matching profiles
-
-    return
-
+    # Check database for matching profiles
+    for i, row in enumerate(database[1:]):
+        if row[1:] == longest_str_counts:
+            print(row[0])
+            return
+        else:
+            print("No Match for", row[0])
 
 def longest_match(sequence, subsequence):
     """Returns length of longest run of subsequence in sequence."""
